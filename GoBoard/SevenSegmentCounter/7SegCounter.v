@@ -27,13 +27,14 @@ endmodule
 
 
 
-module test #( parameter DURATION = 22 ) (
+module Driver (
 	input CLK,
 	input SW1,
 	input SW3,
 	output [6:0] SEG
 );
 
+localparam DURATION = 22;
 
 reg [3:0] number = 0;
 reg A, B;
