@@ -1,0 +1,35 @@
+# ##############################################################################
+
+# iCEcube PCF
+
+# Version:            2014.12.27052
+
+# File Generated:     Apr 27 2015 09:46:33
+
+# Family & Device:    iCE40HX1K
+
+# Package:            VQ100
+
+# ##############################################################################
+
+### Main FPGA Clock
+set_io --warn-no-port CLK 15
+
+set_io --warn-no-port SW1 53
+set_io --warn-no-port SW3 54
+
+### LED Pins:
+set_io --warn-no-port LED[0] 56
+set_io --warn-no-port LED[1] 57
+set_io --warn-no-port LED[2] 59
+set_io --warn-no-port LED[3] 60
+
+
+### 7 Segment Outputs
+set_io  --warn-no-port SEG[6] 3
+set_io  --warn-no-port SEG[5] 4
+set_io  --warn-no-port SEG[4] 93
+set_io  --warn-no-port SEG[3] 91
+set_io  --warn-no-port SEG[2] 90
+set_io  --warn-no-port SEG[1] 1
+set_io  --warn-no-port SEG[0] 2 

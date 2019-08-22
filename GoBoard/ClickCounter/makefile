@@ -1,4 +1,4 @@
-TARGET = 7SegCounter
+TARGET = ClickCounter
 
 all: $(TARGET).bin
 
