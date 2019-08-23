@@ -1,3 +1,6 @@
+`ifndef __SEVENSEGMENT__V__
+`define __SEVENSEGMENT__V__
+
 module SevenSegment (
 	input CLK,
 	output [6:0] SEG,

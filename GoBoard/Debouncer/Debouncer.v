@@ -1,3 +1,6 @@
+`ifndef __DEBOUNCER__V__
+`define __DEBOUNCER__V__
+
 module Debouncer (
 	input CLK,
 	input in,
@@ -60,3 +63,5 @@ Debouncer  d1 (CLK, SW[0], out);
 
 endmodule
 */
+
+`endif
