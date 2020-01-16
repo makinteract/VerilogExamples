@@ -15,4 +15,7 @@ prog_flash: $(TARGET).bin
 	iceprog $(TARGET).bin
 
 clean:
-	rm *.bin *.blif *.txt
+	rm *.bin *.blif *.txt *.vcd
+
+test: test.v
+	iverilog -o test test.v && ./test
