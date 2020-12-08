@@ -26,9 +26,9 @@ module top(
 );
 
   // SPI PARAMS
-  parameter SPI_MODE = 3; // CPOL = 1, CPHA = 1
-  parameter CLKS_PER_HALF_BIT = 8;  // 6.25 MHz
-
+  parameter SPI_MODE = 0; // CPOL = 0, CPHA = 0
+  parameter CLKS_PER_HALF_BIT = 8;  // 3.125 MHz => I think the computaiton is 25Mhz / 8
+  
   // Others
   DisplayNumber ns (CLK, SEG1, SEG2, out);
 

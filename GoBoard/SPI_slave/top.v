@@ -1,8 +1,10 @@
 `default_nettype none
 
+`include "SPI_Slave.v"
+`include "UART_TX.v"
 `include "Display.v"
-`include "SPI_Master.v"
-// `include "SPI_Slave.v"
+
+// read data (a,b,c,d...) SPI slave mode 0, and print it using UART
 
 
 // define a Count module
@@ -11,84 +13,55 @@ module top(
 	    output [6:0] SEG1,
 	    output [6:0] SEG2,
 	    output [3:0] LED,
-      output SCK,
-      input MISO,
-      output MOSI,
-      output CS,
+      input SCK,
+      output MISO,
+      input MOSI,
+      input CS,
       input SW1,
       input SW2,
+      output UARTTX,
 );
 
-  parameter SPI_MODE = 3; // CPOL = 1, CPHA = 1
-  parameter CLKS_PER_HALF_BIT = 6;  // 6.25 MHz
-
   wire [7:0] in;
-  reg [7:0] out = 8'd97;
-  wire ready;
+  reg [7:0] data = 8'd0;
+  wire done;
 
-  DisplayNumber ns (CLK, SEG1, SEG2, out);
+  DisplayNumber ns (CLK, SEG1, SEG2, in);
 
-  // SPI_Slave slave
-  // (
-  //  // Control/Data Signals,
-  //  .i_Rst_L(reset),   // FPGA Reset
-  //  .i_Clk(CLK),       // FPGA Clock
-  //  .o_RX_DV(done),    // Data Valid pulse (1 clock cycle)
-  //  .o_RX_Byte(in),      // Byte received on MOSI
-  //  .i_TX_DV(write),    // Data Valid pulse to register i_TX_Byte
-  //  .i_TX_Byte(out),  // Byte to serialize to MISO.
+  // I cannot get to work the MISO...
 
-  //  // SPI Interface
-  //  .i_SPI_Clk(SCK),
-  //  .o_SPI_MISO(MISO),
-  //  .i_SPI_MOSI(MOSI),
-  //  .i_SPI_CS_n(CS)
-  //  );
-
-  // #(parameter SPI_MODE = 0,
-  //   parameter CLKS_PER_HALF_BIT = 2)
-  
-  reg sw;
-  
-  SPI_Master #(.SPI_MODE(SPI_MODE),
-    .CLKS_PER_HALF_BIT(CLKS_PER_HALF_BIT)) mater
+  SPI_Slave #(.SPI_MODE(0)) slave
   (
    // Control/Data Signals,
-   .i_Rst_L(1'b1),
-   .i_Clk(CLK),
-   
-   // TX (MOSI) Signals
-   .i_TX_Byte(out),
-   .i_TX_DV(enableOnce),
-   .o_TX_Ready(ready),
-   
-   // RX (MISO) Signals
-   .o_RX_DV(),     // Data Valid pulse (1 clock cycle)
-   .o_RX_Byte(),   // Byte received on MISO
+   .i_Rst_L(1'b1),   // FPGA Reset
+   .i_Clk(CLK),       // FPGA Clock
+   .o_RX_DV(done),    // Data Valid pulse (1 clock cycle)
+   .o_RX_Byte(in),    // Byte received on MOSI
+   .i_TX_DV(),      // Data Valid pulse to register i_TX_Byte
+   .i_TX_Byte(),  // Byte to serialize to MISO.
 
    // SPI Interface
-   .o_SPI_Clk(SCK),
-   .i_SPI_MISO(MISO),
-   .o_SPI_MOSI(MOSI)
+   .i_SPI_Clk(SCK),
+   .o_SPI_MISO(MISO),
+   .i_SPI_MOSI(MOSI),
+   .i_SPI_CS_n(CS)
    );
 
-  reg enableOnce=0;
-	reg curr=0;
 
-	always @(posedge CLK)
-	begin
-		curr <= SW1;
-		enableOnce <= SW1 & !curr;
-    
-    if (enableOnce) out <= out + 1;
+  // 115200
+  UART_TX #(.CLKS_PER_BIT(217)) UART_TX_Inst
+  (
+     .i_Rst_L(1'b1),
+     .i_Clock(CLK),
+     .i_TX_DV(done),
+     .i_TX_Byte(in),
+     .o_TX_Active(),
+     .o_TX_Serial(UARTTX),
+     .o_TX_Done()
+  );
 
-    if (SW2) out <= 8'd97;
-	end
 
   
-
-
-
 endmodule
 
 

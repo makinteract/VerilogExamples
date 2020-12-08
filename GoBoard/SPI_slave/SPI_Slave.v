@@ -36,7 +36,7 @@ module SPI_Slave
    input      i_SPI_Clk,
    output reg o_SPI_MISO,
    input      i_SPI_MOSI,
-   input      i_SPI_CS_n
+   input      i_SPI_CS_n,
    );
 
 
